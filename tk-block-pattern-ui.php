@@ -82,7 +82,7 @@ function tk_register_block_patterns() {
 	if ( ! empty( $terms ) && ! is_wp_error( $terms ) ){
 		foreach ( $terms as $term ) {
 			register_block_pattern_category(
-				$term->slug,
+				'tk_' . $term->slug,
 				array( 'label' => __( $term->name, 'tk_block_patterns' ) )
 			);
 		}
@@ -105,7 +105,7 @@ function tk_register_block_patterns() {
 			global $post;
 
 			$term_obj_list = get_the_terms( $post->ID, 'tk_block_pattern_category' );
-			$terms_string  = implode(', ', wp_list_pluck( $term_obj_list, 'slug' ) );
+			$terms_string  = implode(', ', array_map( function( $value ) { return 'tk_' . $value; }, wp_list_pluck( $term_obj_list, 'slug' ) ) );
 
 			register_block_pattern(
 				'tk/' . sanitize_key( $post->post_name ),

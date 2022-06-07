@@ -105,14 +105,13 @@ function tk_register_block_patterns() {
 			global $post;
 
 			$term_obj_list = get_the_terms( $post->ID, 'tk_block_pattern_category' );
-			$terms_string  = implode(', ', array_map( function( $value ) { return 'tk_' . $value; }, wp_list_pluck( $term_obj_list, 'slug' ) ) );
 
 			register_block_pattern(
 				'tk/' . sanitize_key( $post->post_name ),
 				array(
 						'title'       =>  wp_strip_all_tags( $post->post_title ) ,
 						'content'     =>  $post->post_content,
-						'categories'	=>  array( $terms_string ),
+						'categories'	=>  array_map( function( $value ) { return 'tk_' . $value; }, wp_list_pluck( $term_obj_list, 'slug' ) ),
 				)
 			);
 		}

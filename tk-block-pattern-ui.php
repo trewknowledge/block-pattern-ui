@@ -107,18 +107,21 @@ function tk_register_block_patterns() {
 
 			$term_obj_list = get_the_terms( $post->ID, 'tk_block_pattern_category' );
 
-			register_block_pattern(
-				'tk/' . sanitize_key( $post->post_name ),
-				[
-					'title'      => wp_strip_all_tags( $post->post_title ),
-					'content'    => $post->post_content,
-					'categories' => array_map(
-						function( $value ) {
-							return 'tk_' . $value; },
-						wp_list_pluck( $term_obj_list, 'slug' )
-					),
-				]
-			);
+			if ( is_array( $term_obj_list ) ) {
+				register_block_pattern(
+					'tk/' . sanitize_key( $post->post_name ),
+					[
+						'title'      => wp_strip_all_tags( $post->post_title ),
+						'content'    => $post->post_content,
+						'categories' => array_map(
+							function( $value ) {
+								return 'tk_' . $value;
+							},
+							wp_list_pluck( $term_obj_list, 'slug' )
+						),
+					]
+				);
+			}
 		}
 	}
 	wp_reset_postdata();
